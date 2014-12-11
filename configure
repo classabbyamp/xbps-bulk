@@ -100,8 +100,9 @@ printf "INFO: Running '$RCV_CMD_LINE' (${CROSS_ARCH:-native}) ...\n"
 
 [ -f $RCV_F ] && _append="-a"
 $RCV_CMD_LINE | tee ${_append} $RCV_F
-if [ 0 -ne ${PIPESTATUS[0]} ]; then
-	printf "ERROR: xbps-checkvers exited with an error: %d\n" ${PIPESTATUS[0]}
+rval=${PIPESTATUS[0]}
+if [ $rval -ne 0 ]; then
+	echo "ERROR: xbps-checkvers exited with an error: $rval"
 	exit 1
 fi
 grep pkgname $RCV_F | awk '{ print $2 }' > pkgs.txt
