@@ -165,12 +165,16 @@ printf "\t@$XSC pkg \${@F}\n"					>> Makefile
 printf "\t@touch \$@\n"						>> Makefile
 printf "\t@rm tobuild/\${@F}\n\n"				>> Makefile
 
+
 printf "INFO: Finding and adding dependencies...\n"
 printf "# Dependencies\n"					>> Makefile
 for p in $TOBUILD; do
-	sedcmd="s|[<>].*\$||g"
-	_deps="`$XSC show-build-deps $p | sed -e \"$sedcmd\"`"
 	deps=
+	sedcmd="s|[<>].*\$||g"
+	_deps="`$XSC show-build-deps $p 2>/dev/null| sed -e \"$sedcmd\"`"
+	if [ -z "${_deps}" ]; then
+		continue
+	fi
 	for d in $_deps; do
 		found=0
 		realdep=`getlink $d`
