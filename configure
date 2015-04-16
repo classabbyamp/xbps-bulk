@@ -112,7 +112,10 @@ rm -rf tobuild built
 mkdir -p tobuild built
 for p in `cat pkgs.txt`; do
 	if [ -f "$SRCPKGS/$p/template" ]; then
-		touch tobuild/$p
+		$XSC show-avail $p 2>/dev/null
+		if [ $? -eq 0 ]; then
+			touch tobuild/$p
+		fi
 	fi
 done
 
