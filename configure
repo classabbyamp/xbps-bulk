@@ -21,7 +21,7 @@ USAGE="Usage: $0 [-a cross-arch] [-CN] [-d|-m|-h dir]"
 	exit 1
 }
 
-while getopts a:Cc:d:Nm:h:v OPT; do
+while getopts a:Cc:d:Nm:th:v OPT; do
 	case "$OPT" in
 	a)
 		CFG_CROSS="-a $OPTARG"
@@ -56,6 +56,7 @@ while getopts a:Cc:d:Nm:h:v OPT; do
 		DISTDIR="$OPTARG"
 		;;
 	N)	CFG_LOCAL="-N";;
+	t)	CFG_OVERLAYFS="-t";;
 	m)
 		[ -d $OPTARG ] || {
 			printf "ERROR: Cannot find MASTERDIR "
@@ -88,7 +89,7 @@ shift $(($OPTIND - 1))
 SRCPKGS=$DISTDIR/srcpkgs
 XBPS_SRCPKGDIR=$SRCPKGS
 
-XSC="$DISTDIR/xbps-src $CFG_CROSS $CFG_LOCAL -L $CFG_CMDLINE -m $MASTERDIR -H $HOSTDIR"
+XSC="$DISTDIR/xbps-src $CFG_CROSS $CFG_LOCAL $CFG_OVERLAYFS -L $CFG_CMDLINE -m $MASTERDIR -H $HOSTDIR"
 
 if [ -n "$CFG_CROSS" ]; then
 	export XBPS_TARGET_ARCH=$CROSS_ARCH
