@@ -3,6 +3,7 @@ VERSION=0.0.0
 
 CFG_CMDLINE=
 CFG_CROSS=
+CFG_REPO=
 CROSS_ARCH=
 DISTDIR=
 MASTERDIR=
@@ -14,14 +15,14 @@ RCV=`command -v xbps-checkvers 2>/dev/null`
 RCV_F="repo-checkvers.txt"
 TOBUILD=
 _TOBUILD=
-USAGE="Usage: $0 [-a cross-arch] [-CN] [-d|-m|-h dir]"
+USAGE="Usage: $0 [-a cross-arch] [-CN] [-R repo] [-d|-m|-h dir]"
 
 [ -f $RCV ] || {
 	printf "ERROR: The 'xbps-checkvers' was not found in the PATH.\n"
 	exit 1
 }
 
-while getopts a:Cc:d:Nm:th:v OPT; do
+while getopts a:Cc:d:Nm:th:vR: OPT; do
 	case "$OPT" in
 	a)
 		CFG_CROSS="-a $OPTARG"
@@ -73,6 +74,9 @@ while getopts a:Cc:d:Nm:th:v OPT; do
 		}
 		HOSTDIR="$OPTARG"
 		;;
+	R)
+		CFG_REPO="-R $OPTARG"
+		;;
 	\?)
 		printf "%s\n" "$USAGE"
 		exit 1
@@ -95,7 +99,7 @@ if [ -n "$CFG_CROSS" ]; then
 	export XBPS_TARGET_ARCH=$CROSS_ARCH
 fi
 
-RCV_CMD_LINE="$RCV --distdir=${DISTDIR} ${*}"
+RCV_CMD_LINE="$RCV $CFG_REPO --distdir=${DISTDIR} ${*}"
 printf "INFO: Getting list of updates, please wait...\n"
 printf "INFO: Running '$RCV_CMD_LINE' (${CROSS_ARCH:-native}) ...\n"
 
