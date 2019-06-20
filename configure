@@ -110,7 +110,11 @@ if [ $rval -ne 0 ]; then
 	echo "ERROR: xbps-checkvers exited with an error: $rval"
 	exit 1
 fi
-grep pkgname $RCV_F | awk '{ print $2 }' > pkgs.txt
+if "$RCV" -V | grep "XBPS: 0.54" 1>/dev/null 2>&1; then
+	cut -d' ' -f1 "$RCV_F" >pkgs.txt
+else
+	grep pkgname "$RCV_F" | awk '{ print $2 }' >pkgs.txt
+fi
 
 printf "INFO: Creating source targets...\n"
 rm -rf tobuild built
