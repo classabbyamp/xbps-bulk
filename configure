@@ -110,11 +110,18 @@ if [ $rval -ne 0 ]; then
 	echo "ERROR: xbps-checkvers exited with an error: $rval"
 	exit 1
 fi
-if "$RCV" -V | grep "XBPS: 0.54" 1>/dev/null 2>&1; then
-	cut -d' ' -f1 "$RCV_F" >pkgs.txt
-else
-	grep pkgname "$RCV_F" | awk '{ print $2 }' >pkgs.txt
-fi
+
+xbps-uhelper pkgmatch "xbps-$($RCV -V | cut -d' ' -f2)_1" 'xbps>=0.54_1'
+case "$?" in
+0) # version < 0.54
+	grep pkgname "$RCV_F" | awk '{ print $2 }' >pkgs.txt ;;
+1) # version >= 0.54
+	cut -d' ' -f1 "$RCV_F" >pkgs.txt ;;
+*)
+	echo "ERROR: couldn't determine xbps-checkvers version"
+	exit 1
+	;;
+esac
 
 printf "INFO: Creating source targets...\n"
 rm -rf tobuild built
