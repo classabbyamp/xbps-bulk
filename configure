@@ -164,6 +164,23 @@ for tb in $_TOBUILD; do
 	concat "`getlink $tb`"
 done
 
+if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
+	xbps-src-make \
+		-distdir "$DISTDIR" \
+		-hostdir "$HOSTDIR" \
+		-masterdir "$MASTERDIR" \
+		${XBPS_ARCH:+-arch ${XBPS_ARCH}} \
+		${CROSS_ARCH:+-cross ${CROSS_ARCH}} \
+		-flags "$CFG_LOCAL $CFG_OVERLAYFS -L $CFG_CMDLINE" \
+		$TOBUILD \
+		>Makefile
+	if [ $? -eq 0 ]; then
+		printf "INFO: 'Makefile' generated.\n"
+		printf "INFO: Type 'make'\n"
+		exit 0
+	fi
+fi
+
 printf "INFO: Removing old Makefile (if any)...\n"
 [ -f Makefile ] && rm -f Makefile
 touch Makefile
