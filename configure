@@ -165,11 +165,12 @@ for tb in $_TOBUILD; do
 done
 
 if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
+	masterdirarch=$(xbps-uhelper -r "$MASTERDIR" arch)
 	xbps-src-make \
 		-distdir "$DISTDIR" \
 		-hostdir "$HOSTDIR" \
 		-masterdir "$MASTERDIR" \
-		${XBPS_ARCH:+-arch ${XBPS_ARCH}} \
+		${masterdirarch:+-arch $masterdirarch} \
 		${CROSS_ARCH:+-cross ${CROSS_ARCH}} \
 		-flags "$CFG_LOCAL $CFG_OVERLAYFS -L $CFG_CMDLINE" \
 		$TOBUILD \
