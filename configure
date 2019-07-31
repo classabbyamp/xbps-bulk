@@ -165,7 +165,7 @@ for tb in $_TOBUILD; do
 done
 
 if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
-	masterdirarch=$(xbps-uhelper -r "$MASTERDIR" arch)
+	masterdirarch=$(XBPS_ARCH= XBPS_TARGET_ARCH= xbps-uhelper -r "$MASTERDIR" arch)
 	xbps-src-make \
 		-distdir "$DISTDIR" \
 		-hostdir "$HOSTDIR" \
