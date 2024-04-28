@@ -1,9 +1,9 @@
 #!/bin/bash
 VERSION=0.0.0
 
-CFG_CMDLINE=
 CFG_CROSS=
 CFG_REPO=
+CFG_ALT_REPO=
 CROSS_ARCH=
 DISTDIR=
 MASTERDIR=
@@ -15,14 +15,14 @@ RCV=`command -v xbps-checkvers 2>/dev/null`
 RCV_F="repo-checkvers.txt"
 TOBUILD=
 _TOBUILD=
-USAGE="Usage: $0 [-a cross-arch] [-CN] [-R repo] [-d|-m|-h dir]"
+USAGE="Usage: $0 [-a cross-arch] [-CN] [-R repo] [-d|-m|-h dir] [-r dir]"
 
 [ -f $RCV ] || {
 	printf "ERROR: The 'xbps-checkvers' was not found in the PATH.\n"
 	exit 1
 }
 
-while getopts a:Cc:d:Nm:th:vR: OPT; do
+while getopts a:Cd:Nm:th:vR:r: OPT; do
 	case "$OPT" in
 	a)
 		CFG_CROSS="-a $OPTARG"
@@ -77,6 +77,9 @@ while getopts a:Cc:d:Nm:th:vR: OPT; do
 	R)
 		CFG_REPO="-R $OPTARG"
 		;;
+	r)
+		CFG_ALT_REPO="-r $OPTARG"
+		;;
 	\?)
 		printf "%s\n" "$USAGE"
 		exit 1
@@ -93,7 +96,7 @@ shift $(($OPTIND - 1))
 SRCPKGS=$DISTDIR/srcpkgs
 XBPS_SRCPKGDIR=$SRCPKGS
 
-XSC="$DISTDIR/xbps-src $CFG_CROSS $CFG_LOCAL $CFG_OVERLAYFS -L $CFG_CMDLINE -m $MASTERDIR -H $HOSTDIR"
+XSC="$DISTDIR/xbps-src $CFG_CROSS $CFG_LOCAL $CFG_OVERLAYFS -L $CFG_ALT_REPO -m $MASTERDIR -H $HOSTDIR"
 
 if [ -n "$CFG_CROSS" ]; then
 	export XBPS_TARGET_ARCH=$CROSS_ARCH
@@ -172,7 +175,7 @@ if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
 		-masterdir "$MASTERDIR" \
 		${masterdirarch:+-arch $masterdirarch} \
 		${CROSS_ARCH:+-cross ${CROSS_ARCH}} \
-		-flags "$CFG_LOCAL $CFG_OVERLAYFS -L $CFG_CMDLINE" \
+		-flags "$CFG_LOCAL $CFG_OVERLAYFS -L $CFG_ALT_REPO" \
 		$TOBUILD \
 		>Makefile
 	if [ $? -eq 0 ]; then
