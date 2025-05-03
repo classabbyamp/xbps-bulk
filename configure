@@ -164,11 +164,11 @@ for tb in $_TOBUILD; do
 	concat "`getlink $tb`"
 done
 
-ls -l /usr/local/bin
-env | grep PATH
-if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
+XSM="$(command -v xbps-src-make 2>/dev/null)"
+echo "XSM: $XSM"
+if [ -f "$XSM" ]; then
 	masterdirarch=$(unset XBPS_ARCH; unset XBPS_TARGET_ARCH; xbps-uhelper -r "$MASTERDIR" arch)
-	xbps-src-make \
+	"$XSM" \
 		-distdir "$DISTDIR" \
 		-hostdir "$HOSTDIR" \
 		-masterdir "$MASTERDIR" \
