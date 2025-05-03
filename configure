@@ -164,12 +164,9 @@ for tb in $_TOBUILD; do
 	concat "`getlink $tb`"
 done
 
-XSM="$(command -v xbps-src-make 2>/dev/null)"
-echo "XSM: $XSM"
-set -x
-if [ -f "$XSM" ]; then
+if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
 	masterdirarch=$(unset XBPS_ARCH; unset XBPS_TARGET_ARCH; xbps-uhelper -r "$MASTERDIR" arch)
-	"$XSM" \
+	xbps-src-make \
 		-distdir "$DISTDIR" \
 		-hostdir "$HOSTDIR" \
 		-masterdir "$MASTERDIR" \
@@ -182,9 +179,11 @@ if [ -f "$XSM" ]; then
 		printf "INFO: 'Makefile' generated.\n"
 		printf "INFO: Type 'make'\n"
 		exit 0
+	else
+		printf "ERROR: failed to generate 'Makefile'.\n"
+		exit 1
 	fi
 fi
-set +x
 
 printf "INFO: Removing old Makefile (if any)...\n"
 [ -f Makefile ] && rm -f Makefile
