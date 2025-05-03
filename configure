@@ -1,4 +1,6 @@
 #!/bin/bash
+env
+
 VERSION=0.0.0
 
 CFG_CMDLINE=
