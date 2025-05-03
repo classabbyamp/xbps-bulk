@@ -166,6 +166,7 @@ done
 
 XSM="$(command -v xbps-src-make 2>/dev/null)"
 echo "XSM: $XSM"
+set -x
 if [ -f "$XSM" ]; then
 	masterdirarch=$(unset XBPS_ARCH; unset XBPS_TARGET_ARCH; xbps-uhelper -r "$MASTERDIR" arch)
 	"$XSM" \
@@ -183,6 +184,7 @@ if [ -f "$XSM" ]; then
 		exit 0
 	fi
 fi
+set +x
 
 printf "INFO: Removing old Makefile (if any)...\n"
 [ -f Makefile ] && rm -f Makefile
