@@ -1,6 +1,4 @@
 #!/bin/bash
-env
-
 VERSION=0.0.0
 
 CFG_CMDLINE=
@@ -166,6 +164,8 @@ for tb in $_TOBUILD; do
 	concat "`getlink $tb`"
 done
 
+ls -l /usr/local/bin
+env | grep PATH
 if [ "$(command -v xbps-src-make 2>/dev/null)" ]; then
 	masterdirarch=$(unset XBPS_ARCH; unset XBPS_TARGET_ARCH; xbps-uhelper -r "$MASTERDIR" arch)
 	xbps-src-make \
